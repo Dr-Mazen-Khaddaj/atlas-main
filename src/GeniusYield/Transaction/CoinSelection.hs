@@ -165,9 +165,10 @@ selectInputs
                         selectionConstraints
                         selectionParams
         let inRefs     = S.fromList $ gyTxInTxOutRef . gyTxInDet <$> existingInputs
-            changeOuts = map
-                (\(fromTokenBundle -> tokenChange) -> GYTxOut changeAddr tokenChange Nothing Nothing)
-                changeGenerated
+            changeOuts = []
+            -- changeOuts = map
+                -- (\(fromTokenBundle -> tokenChange) -> GYTxOut changeAddr tokenChange Nothing Nothing)
+                -- changeGenerated
             foldHelper acc (CBalanceInternal.WalletUTxO {txIn}, _)
                 | fromCWalletTxIn txIn `S.member` inRefs = acc
                 | otherwise = case utxosLookup (fromCWalletTxIn txIn) ownUtxos of
