@@ -16,7 +16,7 @@ module GeniusYield.GYConfig
     , findMaestroTokenAndNetId
     , isNodeChainIx
     , isMaestro
-    , isBlockfrost
+    -- , isBlockfrost
     , isDbSync
     ) where
 
@@ -35,7 +35,7 @@ import qualified Database.PostgreSQL.Simple.URL         as PQ
 import qualified Cardano.Api                            as Api
 
 import           GeniusYield.Imports
-import qualified GeniusYield.Providers.Blockfrost       as Blockfrost
+-- import qualified GeniusYield.Providers.Blockfrost       as Blockfrost
 import qualified GeniusYield.Providers.CachedQueryUTxOs as CachedQuery
 import qualified GeniusYield.Providers.CardanoDbSync    as DbSync
 import qualified GeniusYield.Providers.Katip            as Katip
@@ -75,7 +75,7 @@ data GYCoreProviderInfo
   = GYNodeChainIx {cpiSocketPath :: !FilePath, cpiMaestroToken :: !(Confidential Text)}
   | GYDbSync {cpiCardanoDbSync :: !PQConnInf, cpiCardanoSubmitApiUrl :: !String}
   | GYMaestro {cpiMaestroToken :: !(Confidential Text)}
-  | GYBlockfrost {cpiBlockfrostKey :: !(Confidential Text)}
+  -- | GYBlockfrost {cpiBlockfrostKey :: !(Confidential Text)}
   deriving stock (Show)
 
 coreProviderIO :: FilePath -> IO GYCoreProviderInfo
@@ -97,9 +97,9 @@ isMaestro :: GYCoreProviderInfo -> Bool
 isMaestro GYMaestro{} = True
 isMaestro _           = False
 
-isBlockfrost :: GYCoreProviderInfo -> Bool
-isBlockfrost GYBlockfrost{} = True
-isBlockfrost _              = False
+-- isBlockfrost :: GYCoreProviderInfo -> Bool
+-- isBlockfrost GYBlockfrost{} = True
+-- isBlockfrost _              = False
 
 findMaestroTokenAndNetId :: [GYCoreConfig] -> IO (Text, GYNetworkId)
 findMaestroTokenAndNetId configs = do
@@ -190,22 +190,22 @@ withCfgProviders
             , MaestroApi.maestroLookupDatum maestroApiEnv
             , MaestroApi.maestroSubmitTx maestroApiEnv
             )
-        GYBlockfrost (Confidential key) -> do
-          let proj = Blockfrost.networkIdToProject cfgNetworkId key
-          blockfrostGetParams <- makeGetParameters
-            (Blockfrost.blockfrostGetCurrentSlot proj)
-            (Blockfrost.blockfrostProtocolParams proj)
-            (Blockfrost.blockfrostSystemStart proj)
-            (Blockfrost.blockfrostEraHistory proj)
-            (Blockfrost.blockfrostStakePools proj)
-          blockfrostSlotActions <- makeSlotActions slotCachingTime $ Blockfrost.blockfrostGetCurrentSlot proj
-          pure
-            ( blockfrostGetParams
-            , blockfrostSlotActions
-            , Blockfrost.blockfrostQueryUtxo proj
-            , Blockfrost.blockfrostLookupDatum proj
-            , Blockfrost.blockfrostSubmitTx proj
-            )
+        -- GYBlockfrost (Confidential key) -> do
+          -- let proj = Blockfrost.networkIdToProject cfgNetworkId key
+          -- blockfrostGetParams <- makeGetParameters
+            -- (Blockfrost.blockfrostGetCurrentSlot proj)
+            -- (Blockfrost.blockfrostProtocolParams proj)
+            -- (Blockfrost.blockfrostSystemStart proj)
+            -- (Blockfrost.blockfrostEraHistory proj)
+            -- (Blockfrost.blockfrostStakePools proj)
+          -- blockfrostSlotActions <- makeSlotActions slotCachingTime $ Blockfrost.blockfrostGetCurrentSlot proj
+          -- pure
+            -- ( blockfrostGetParams
+            -- , blockfrostSlotActions
+            -- , Blockfrost.blockfrostQueryUtxo proj
+            -- , Blockfrost.blockfrostLookupDatum proj
+            -- , Blockfrost.blockfrostSubmitTx proj
+            -- )
 
       bracket (Katip.mkKatipLog ns cfgLogging) logCleanUp $ \gyLog' -> do
         (gyQueryUTxO, gySlotActions) <-

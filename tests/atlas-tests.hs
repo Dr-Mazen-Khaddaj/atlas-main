@@ -29,7 +29,8 @@ import           GeniusYield.Types
 
 main :: IO ()
 main = do
-    configs <- forM ["maestro-config.json", "blockfrost-config.json"] coreConfigIO
+    -- configs <- forM ["maestro-config.json", "blockfrost-config.json"] coreConfigIO
+    configs <- forM ["maestro-config.json"] coreConfigIO
     (providerToken, netId) <- findMaestroTokenAndNetId configs
     rootDir <- findPackageRoot
     defaultMain $ testGroup "atlas"
