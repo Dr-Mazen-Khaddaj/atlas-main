@@ -165,7 +165,8 @@ selectInputs
                         selectionConstraints
                         selectionParams
         let inRefs     = S.fromList $ gyTxInTxOutRef . gyTxInDet <$> existingInputs
-            changeOuts = []
+            -- changeOuts = []
+            changeOuts = (:[]) $ GYTxOut changeAddr (mconcat [fromTokenBundle changeTB | changeTB <- changeGenerated]) Nothing Nothing
             -- changeOuts = map
                 -- (\(fromTokenBundle -> tokenChange) -> GYTxOut changeAddr tokenChange Nothing Nothing)
                 -- changeGenerated
